@@ -24,7 +24,7 @@ SECRET_KEY = 'biuk-y(2y8$m3ah^*s6+sf$opadru61g&_4$vq-@h@%$7@k-=j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['157.245.27.213', 'localhost']
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -133,3 +133,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')

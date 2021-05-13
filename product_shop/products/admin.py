@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.db import models
+from django.forms import NumberInput
+
 from product_shop.products.models import Product, Category, Characteristic, Image, SubCategory
 
 
@@ -8,6 +11,9 @@ class TabImageAdmin(admin.TabularInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.IntegerField: {'widget': NumberInput(attrs={'size': '40'})},
+    }
     search_fields = ['name', 'barcode']
     list_display = ['name', 'barcode', 'category', 'amount', 'type', 'price', 'active']
     fields = ['name', 'category', 'sub_category', 'barcode', 'amount', 'type', 'price', 'active', 'characteristic']
