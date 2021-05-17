@@ -25,6 +25,7 @@ SECRET_KEY = 'biuk-y(2y8$m3ah^*s6+sf$opadru61g&_4$vq-@h@%$7@k-=j'
 DEBUG = True
 
 ALLOWED_HOSTS = ['157.245.27.213', 'localhost']
+HOST = 'http://localhost:8000'
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -134,3 +135,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

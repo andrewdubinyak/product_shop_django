@@ -1,1 +1,1 @@
-# product_shop_django
+# Product Shop

@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.html import mark_safe
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -28,9 +30,19 @@ class SubCategory(models.Model):
 class Image(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField(upload_to='media/')
+    image_url = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
+
+    def image_tag(self):
+        return mark_safe('<img src="{}" width="300" height="200" />'.format(self.image.url))
+
+    image_tag.short_description = 'Image Preview'
+
+    def save(self, *args, **kwargs):
+        self.image_url = settings.HOST + self.image.url
+        super(Image, self).save(*args, **kwargs)
 
 
 class Characteristic(models.Model):

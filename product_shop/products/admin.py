@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.forms import NumberInput
+from django.utils.html import format_html
 
 from product_shop.products.models import Product, Category, Characteristic, Image, SubCategory
 
@@ -37,11 +38,13 @@ class CharacteristicAdmin(admin.ModelAdmin):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'image']
+    list_display = ('name', 'image_tag')
+    readonly_fields = ['image_tag', ]
+    fields = ['name', 'image', 'image_tag']
 
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Characteristic, CharacteristicAdmin)
-admin.site.register(Image)
+admin.site.register(Image, ImageAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)
