@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.db import models
 from django.forms import NumberInput
-from django.utils.html import format_html
 
 from product_shop.products.models import Product, Category, Characteristic, Image, SubCategory
 

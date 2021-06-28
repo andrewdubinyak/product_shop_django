@@ -5,5 +5,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('product_shop.products.urls', namespace='products_api'))
+    path('api/', include('product_shop.products.urls', namespace='products_api')),
+    path('api-auth/', include('product_shop.accounts.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

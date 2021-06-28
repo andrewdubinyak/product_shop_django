@@ -2,6 +2,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
+from product_shop.accounts.models import User
 from product_shop.products.models import Product
 
 
@@ -24,3 +25,26 @@ def update_balance(instance, created, **kwargs):
             instance.product.active = False
             instance.product.save()
         instance.product.save()
+
+
+class Order(models.Model):
+    STATUS = (
+        (1, 'COMPLETE'),
+        (2, 'CANCELED'),
+        (3, 'IN PROGRESS')
+    )
+    PAYMENT = (
+        (1, 'CASH'),
+        (2, 'ONLINE')
+    )
+
+    customer = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='orders')
+    products = models.ManyToManyField(Product)
+    address = models.CharField(max_length=255)
+    total_price = models.CharField(max_length=255)
+    payment_method = models.IntegerField(choices=PAYMENT)
+    is_paid = models.BooleanField(default=False)
+    status = models.IntegerField(choices=STATUS)
+    transaction_id = models.IntegerField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

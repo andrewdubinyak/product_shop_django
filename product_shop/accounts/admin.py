@@ -19,10 +19,10 @@ class UserCreationForm(forms.ModelForm):
 
 class CustomUserAdmin(UserAdmin):
     add_form = UserCreationForm
-    list_display = ('email',)
+    list_display = ('email', 'phone_number')
 
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'first_name', 'last_name')}),
+        (None, {'fields': ('email', 'password', 'first_name', 'last_name', 'phone_number')}),
     )
     add_fieldsets = (
         (None, {

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from product_shop.manager.models import Liquidation
+from product_shop.manager.models import Liquidation, Order
 
 
 class LiquidationAdmin(admin.ModelAdmin):
@@ -9,4 +9,9 @@ class LiquidationAdmin(admin.ModelAdmin):
     fields = ['product', 'number']
 
 
+class OrderAdmin(admin.ModelAdmin):
+    model = Order
+
+
 admin.site.register(Liquidation, LiquidationAdmin)
+admin.site.register(Order, OrderAdmin)

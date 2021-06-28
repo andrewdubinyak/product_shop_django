@@ -1,3 +1,4 @@
+djangorestframework-jwt
 asgiref==3.3.1
 Django==3.1.7
 django-filter==2.4.0

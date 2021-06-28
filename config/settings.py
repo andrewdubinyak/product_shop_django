@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import datetime
 import os
 from pathlib import Path
 
@@ -28,7 +29,12 @@ ALLOWED_HOSTS = ['157.245.27.213', 'localhost']
 HOST = 'http://localhost:8000'
 
 AUTH_USER_MODEL = 'accounts.User'
-
+ADMIN_LOGIN = 'email'
+ADMIN_PASSWORD = ''
+AUTHENTICATION_BACKENDS = [
+    'product_shop.accounts.helpers.auth_manager.SettingsBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -77,6 +83,21 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
 
 WSGI_APPLICATION = 'config.wsgi.application'
 

@@ -5,7 +5,6 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, password, **kwargs):
-        print(6666)
         email = self.normalize_email(email)
         is_staff = kwargs.pop('is_staff', False)
         is_superuser = kwargs.pop('is_superuser', False)
@@ -21,7 +20,6 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, email, password=None, **extra_fields):
-        print(1111)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
