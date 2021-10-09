@@ -1,11 +1,10 @@
 import random
 
-import jwt
 import pyotp
 import base64
-from datetime import datetime
-
-from django.contrib.auth import user_logged_in
+import jwt
+from django.conf import settings
+from rest_framework_jwt.utils import jwt_payload_handler
 from rest_framework_jwt.serializers import jwt_payload_handler
 
 from config import settings
@@ -38,6 +37,23 @@ class generateKey:
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = User.objects.create(
+            email=serializer.validated_data['email'],
+            first_name=serializer.validated_data['first_name'],
+            last_name=serializer.validated_data['last_name'],
+            phone_number=serializer.validated_data['phone_number']
+        )
+        user.set_password(serializer.validated_data['password'])
+        user.save()
+
+        payload = jwt_payload_handler(user)
+        token = jwt.encode(payload, settings.SECRET_KEY)
+        return Response({'token': token.decode('unicode_escape')})
 
 
 class UserProfileView(RetrieveAPIView):
