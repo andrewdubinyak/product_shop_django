@@ -11,7 +11,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
-        fields = ['name']
+        fields = ['name', 'slug']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -34,6 +34,12 @@ class ProductSerializer(serializers.ModelSerializer):
     characteristic = CharacteristicSerializer(read_only=True)
     image = ImageSerializer(read_only=True, many=True)
 
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class ProductFilterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'

@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 
 from product_shop.products import views
@@ -10,5 +10,6 @@ router.register(r'catalog', views.CategoryViewSet)
 router.register(r'sub-categories', views.SubCategoryViewSet)
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    re_path('^products-filter/(?P<category_name>.+)/$', views.ProductFilterViewSet.as_view())
 ]

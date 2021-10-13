@@ -1,7 +1,8 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 
 from product_shop.products.models import Product, Category, SubCategory
-from product_shop.products.serializers import ProductSerializer, CategorySerializer, SubCategorySerializer
+from product_shop.products.serializers import ProductSerializer, CategorySerializer, SubCategorySerializer, \
+    ProductFilterSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -17,3 +18,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class SubCategoryViewSet(viewsets.ModelViewSet):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
+
+
+class ProductFilterViewSet(generics.ListAPIView):
+    serializer_class = ProductFilterSerializer
+
+    def get_queryset(self):
+        products = Product.objects.filter(category__slug=self.kwargs['category_name'])
+        if not products:
+            products = Product.objects.filter(sub_category__slug=self.kwargs['category_name'])
+        return products

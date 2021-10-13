@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.html import mark_safe
 from django.conf import settings
+from django.utils.text import slugify
+from unidecode import unidecode
 
 
 class Category(models.Model):
@@ -9,10 +11,15 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
     name = models.CharField(max_length=255)
+    slug = models.SlugField(null=True, blank=True)
     image = models.ForeignKey('Image', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unidecode(self.name))
+        super(Category, self).save(*args, **kwargs)
 
 
 class SubCategory(models.Model):
@@ -21,10 +28,15 @@ class SubCategory(models.Model):
         verbose_name_plural = 'Sub Categories'
 
     name = models.CharField(max_length=255)
+    slug = models.SlugField(null=True, blank=True)
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL, related_name='sub_categories')
 
     def __str__(self):
         return "{}".format(self.name)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unidecode(self.name))
+        super(SubCategory, self).save(*args, **kwargs)
 
 
 class Image(models.Model):
