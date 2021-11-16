@@ -40,6 +40,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductFilterSerializer(serializers.ModelSerializer):
+    image = ImageSerializer(read_only=True, many=True)
+
     class Meta:
         model = Product
         fields = '__all__'
