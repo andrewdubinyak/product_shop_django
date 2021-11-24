@@ -30,6 +30,12 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
+    readonly_fields = ['get_image']
+
+    def get_image(self, obj):
+        return obj.image.image_tag()
+
+    get_image.short_description = 'Image for category'
 
 
 class CharacteristicAdmin(admin.ModelAdmin):

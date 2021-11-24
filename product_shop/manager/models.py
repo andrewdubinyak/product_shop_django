@@ -1,6 +1,7 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils.safestring import mark_safe
 
 from product_shop.accounts.models import User
 from product_shop.products.models import Product
@@ -48,3 +49,18 @@ class Order(models.Model):
     transaction_id = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Poster(models.Model):
+    label = models.CharField(max_length=255)
+    text = models.TextField(null=True, blank=True)
+
+
+class PosterImage(models.Model):
+    poster = models.ForeignKey('Poster', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='media/')
+
+    def image_tag(self):
+        return mark_safe('<img src="{}" width="300" height="200" />'.format(self.image.url))
+
+    image_tag.short_description = 'Image Preview'
