@@ -12,7 +12,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
-    can_impersonate = models.BooleanField(default=False)
+    USER_TYPE_CHOICES = (
+        (1, 'courier'),
+        (2, 'buyer'),
+        (3, 'manager'),
+    )
+
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -46,3 +52,8 @@ class OTPLogin(models.Model):
 
     def __str__(self):
         return str(self.mobile_phone)
+
+
+class UserAddress(models.Model):
+    address = models.CharField(max_length=256)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_addresses')

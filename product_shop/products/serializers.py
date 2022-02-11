@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from product_shop.products.models import Product, Category, Characteristic, Image, SubCategory
+from product_shop.products.models import Product, Category, Characteristic, SubCategory, ProductImage
 
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
-        fields = '__all__'
+        model = ProductImage
+        fields = ['image', 'is_default']
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -16,7 +16,6 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     sub_categories = SubCategorySerializer(read_only=True, many=True)
-    image = ImageSerializer(read_only=True)
 
     class Meta:
         model = Category
@@ -32,7 +31,7 @@ class CharacteristicSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     characteristic = CharacteristicSerializer(read_only=True)
-    image = ImageSerializer(read_only=True, many=True)
+    product_images = ImageSerializer(read_only=True, many=True)
 
     class Meta:
         model = Product
@@ -40,8 +39,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductFilterSerializer(serializers.ModelSerializer):
-    image = ImageSerializer(read_only=True, many=True)
+    product_images = ImageSerializer(read_only=True, many=True)
 
     class Meta:
+        depth = 1
         model = Product
         fields = '__all__'

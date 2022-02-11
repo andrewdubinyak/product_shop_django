@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['157.245.27.213', 'localhost']
 HOST = 'http://localhost:8000'
+INTERNAL_IPS = ['127.0.0.1']
 
 AUTH_USER_MODEL = 'accounts.User'
 ADMIN_LOGIN = 'email'
@@ -47,11 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
 
     # PRODUCT SHOP APPS
     'product_shop.accounts.apps.AccountsConfig',
     'product_shop.products.apps.ProductsConfig',
-    'product_shop.manager.apps.ManagerConfig',
+    'product_shop.orders.apps.ManagerConfig',
+    'product_shop.pictures.apps.PicturesConfig',
 
 ]
 
@@ -63,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -117,8 +121,22 @@ DATABASES = {
     #     'HOST': os.environ.get('DB_HOST', 'localhost'),
     #     'PORT': os.environ.get('DB_PORT', '5432'),
     # },
-
+    # 'default': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'devProductShop',
+    # }
 }
+
+# Redis
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 2
+CACHE_TTL = 60 * 15
+
+# LiqPay
+LIQPAY_PUBLIC_KEY = 'sandbox_i4685328692'
+LIQPAY_PRIVATE_KEY = 'sandbox_vRYMlswMY8768xApaxKHyAvcluhqFbYwcVstEiPv'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

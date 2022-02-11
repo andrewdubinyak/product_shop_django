@@ -1,7 +1,6 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from django.utils.safestring import mark_safe
 
 from product_shop.accounts.models import User
 from product_shop.products.models import Product
@@ -30,37 +29,42 @@ def update_balance(instance, created, **kwargs):
 
 class Order(models.Model):
     STATUS = (
-        (1, 'COMPLETE'),
-        (2, 'CANCELED'),
-        (3, 'IN PROGRESS')
+        ('complete', 'COMPLETE'),
+        ('canceled', 'CANCELED'),
+        ('in_progress', 'IN PROGRESS')
     )
     PAYMENT = (
-        (1, 'CASH'),
-        (2, 'ONLINE')
+        ('cash', 'CASH'),
+        ('online', 'ONLINE')
     )
 
     customer = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='orders')
-    products = models.ManyToManyField(Product)
+    courier = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='courier_orders')
     address = models.CharField(max_length=255)
-    total_price = models.CharField(max_length=255)
-    payment_method = models.IntegerField(choices=PAYMENT)
+    total_price = models.FloatField(null=True, blank=True)
+    payment_method = models.CharField(max_length=50, choices=PAYMENT)
     is_paid = models.BooleanField(default=False)
-    status = models.IntegerField(choices=STATUS)
-    transaction_id = models.IntegerField(null=True)
+    status = models.CharField(null=True, blank=True, max_length=50, choices=STATUS)
+    transaction_id = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
-class Poster(models.Model):
-    label = models.CharField(max_length=255)
-    text = models.TextField(null=True, blank=True)
+    def __str__(self):
+        return "{}".format(self.customer)
 
 
-class PosterImage(models.Model):
-    poster = models.ForeignKey('Poster', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='media/')
+class OrderProduct(models.Model):
+    order = models.ForeignKey(Order, null=True, blank=True, on_delete=models.CASCADE, related_name='order_products')
+    product = models.ForeignKey(Product, null=True, blank=True, on_delete=models.CASCADE, related_name='product_orders')
+    quantity = models.IntegerField()
+    sub_total = models.FloatField(null=True, blank=True)
 
-    def image_tag(self):
-        return mark_safe('<img src="{}" width="300" height="200" />'.format(self.image.url))
+    def __str__(self):
+        return self.product.name
 
-    image_tag.short_description = 'Image Preview'
+
+@receiver(post_save, sender=OrderProduct, dispatch_uid="update_balance_count")
+def update_product_amount(instance, created, **kwargs):
+    if created:
+        instance.product.amount = instance.product.amount - int(instance.quantity)
+        instance.product.save()

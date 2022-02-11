@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import User, OTPLogin
+from .models import User, OTPLogin, UserAddress
 from .serializers import RegisterSerializer, OTPLoginSerializer
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -60,10 +60,11 @@ class UserProfileView(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_class = JSONWebTokenAuthentication
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         try:
             user_profile = User.objects.get(phone_number=request.user.phone_number)
             status_code = status.HTTP_200_OK
+            user_addresses = UserAddress.objects.filter(user=user_profile).all()
             response = {
                 'success': 'true',
                 'status code': status_code,
@@ -72,7 +73,8 @@ class UserProfileView(RetrieveAPIView):
                     'first_name': user_profile.first_name,
                     'last_name': user_profile.last_name,
                     'phone_number': user_profile.phone_number,
-                    'email': user_profile.email
+                    'email': user_profile.email,
+                    'addresses': [{'address': x.address for x in user_addresses}]
                 }]
             }
 

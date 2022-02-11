@@ -2,12 +2,13 @@ from django.contrib import admin
 from django.db import models
 from django.forms import NumberInput
 
-from product_shop.products.models import Product, Category, Characteristic, Image, SubCategory
+from product_shop.products.models import Product, Category, Characteristic, Image, SubCategory, ProductImage
 
 
-class TabImageAdmin(admin.TabularInline):
-    model = Product.image.through
-    list_display = ['name', 'image']
+class TabImageAdmin(admin.StackedInline):
+    model = ProductImage
+    extra = 0
+    readonly_fields = ['image_tag']
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -29,13 +30,17 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['name', 'get_icon']
     readonly_fields = ['get_image']
 
     def get_image(self, obj):
-        return obj.image.image_tag()
+        return obj.image_tag()
 
-    get_image.short_description = 'Image for category'
+    def get_icon(self, obj):
+        return obj.icon_tag()
+
+    get_icon.short_description = 'Icon'
+    get_image.short_description = 'Image preview'
 
 
 class CharacteristicAdmin(admin.ModelAdmin):
